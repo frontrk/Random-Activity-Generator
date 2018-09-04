@@ -1,6 +1,6 @@
 # Random Activity Generator
 
-## Project setup
+ built with Vue and Chota framework, I've also used axios HTTP client and BoredApi.## Project setup
 ```
 npm install
 ```

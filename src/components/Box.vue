@@ -11,24 +11,32 @@
     <div class="container">
         <div class="row is-center">
             <div class="col-6">
-                <div class="card">
+              
+                <div class="card" >
                     <header>
+                        
                         <h1 class="is-center">{{msg}}</h1>
+                        
                     </header>
-                    <div class="content">
-                        <h4 class="is-center"><cite>{{info.activity}}</cite></h4>
+                    <transition name="slide-fade" mode="out-in">
+                    <div class="content" :key="info.key">
+                      
+                        <h4 class="is-center" ><cite>{{info.activity}}</cite></h4>
+                      
                         <ul>
-                            <ol>Type of activity: {{info.type}}</ol>
-                            <ol>Participants: {{info.participants}}</ol>
-                            <ol>Accesibility:{{info.accessibility}} <meter value="0.5" min="0" max="1"></meter></ol>
-                            <ol>price: {{info.price}}</ol>
-                            <ol> {{info.key}}</ol>
+                            <ol><span>Type of activity: </span>{{info.type}}</ol>
+                            <ol><span>Participants: </span>{{info.participants}}</ol>
+                            <ol><span>Accesibility: </span><meter v-bind:value="info.accessibility" min="0" max="0.55"></meter></ol>
+                            <ol><span>Price: </span><meter v-bind:value="info.price" min="0" max="0.55"></meter></ol>                            
                         </ul>
+                         
                     </div>
+                    </transition>
                     <footer class="is-right">
-                        <a v-on:click="" class="button primary">Generate again</a>
+                        <a v-on:click="getActivity" class="button primary">Generate again</a>
                     </footer>
                 </div>
+                
             </div>
         </div>
     </div>
@@ -50,11 +58,13 @@ export default {
   data() {
     return {
       info: 0,
-      errored: false
+      errored: false,
+      loading: true
     }
   },
-  mounted () {
-    axios
+  methods : {
+    getActivity: function () {
+      axios
       .get('https://www.boredapi.com/api/activity')
       .then(response => (this.info = response.data))
       .catch(error => {
@@ -62,7 +72,12 @@ export default {
         this.errored = true
       })
       .finally(() => this.loading = false)
-  }
+    }
+  },
+   beforeMount(){
+    this.getActivity()
+ },
+
 }
 </script>
 
@@ -90,7 +105,32 @@ export default {
     color: rgb(0, 0, 0);
     text-shadow: 3px 3px rgba(26, 159, 96, 0.2);
   }
+
+  ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+  }
   ol {
-    padding: 1rem; 
+      text-align: left;
+      padding: 1rem;
+      
+  }
+  a {
+    cursor: pointer;
+  }
+  span {
+    font-weight: bold;
+  }
+.slide-fade-enter-active {
+  transition: all .2s ease-in-out;
+}
+.slide-fade-leave-active {
+  transition: all .2s cubic-bezier(4.0, 5.5, 2.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active for <2.1.8 */ {
+  transform: translateX(20px);
+  opacity: 0;
 }
 </style>
